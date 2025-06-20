@@ -9,23 +9,40 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Repository
+      # Step 1: Checkout the code from the repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '14'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Run tests (Make sure tests are defined in package.json)
       - name: Run Tests
         run: npm test -- --coverage
 
-      - name: Lint Code
+      # Step 5: Lint code (if ESLint is configured)
+      - name: Lint code
         run: npm run lint
+
+      # Step 6: Build the app for production
+      - name: Build the app for production
+        run: npm run build
+
+      # Step 7: Deploy to Netlify (example)
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1
+        with:
+          publish-dir: ./build
+          production-branch: main
+          deploy-key: ${{ secrets.NETLIFY_API_KEY }}
